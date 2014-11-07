@@ -4,10 +4,10 @@
 
 	<groupId>com.nanuvem.lom.dao</groupId>
 	<artifactId>memory</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
 
-	<name>kernel</name>
+	<name>MemoryDAO</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>com.nanuvem.lom</groupId>
 			<artifactId>api</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
