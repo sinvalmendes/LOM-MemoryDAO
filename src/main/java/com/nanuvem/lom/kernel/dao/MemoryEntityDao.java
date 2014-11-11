@@ -3,8 +3,6 @@ package com.nanuvem.lom.kernel.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.SerializationUtils;
-
 import com.nanuvem.lom.api.Entity;
 import com.nanuvem.lom.api.MetadataException;
 import com.nanuvem.lom.api.dao.EntityDao;
@@ -13,29 +11,32 @@ public class MemoryEntityDao implements EntityDao {
 
 	private Long id = 1L;
 
-	private List<Entity> entities = new ArrayList<Entity>();
+	private MemoryDatabase memoryDatabase;
+
+	public MemoryEntityDao(MemoryDatabase memoryDatabase) {
+		this.memoryDatabase = memoryDatabase;
+	}
 
 	public Entity create(Entity entity) {
 		entity.setId(id++);
 		entity.setVersion(0);
 
-		Entity clone = (Entity) SerializationUtils.clone(entity);
-		entities.add(clone);
+		memoryDatabase.addEntity(entity);
 		
-		return (Entity) SerializationUtils.clone(clone);
+		return entity;
 	}
 
 	public List<Entity> listAll() {
 		List<Entity> classesReturn = new ArrayList<Entity>();
 
-		for (Entity entity : this.entities) {
-			classesReturn.add((Entity) SerializationUtils.clone(entity));
+		for (Entity entity : memoryDatabase.getEntities()) {
+			classesReturn.add(entity);
 		}
 		return classesReturn;
 	}
 
 	public Entity update(Entity entity) {
-		for (Entity e : this.listAll()) {
+		for (Entity e : memoryDatabase.getEntities()) {
 			if (e.getId().equals(entity.getId())) {
 				if (e.getVersion() > entity.getVersion()) {
 					throw new MetadataException(
@@ -45,9 +46,8 @@ public class MemoryEntityDao implements EntityDao {
 									+ e.getName()
 									+ ". Get the Entity again to obtain the newest version and proceed updating.");
 				}
-				this.entities.remove(e);
-				this.entities.add(entity);
-				return (Entity) SerializationUtils.clone(entity);
+				memoryDatabase.updateEntity(entity);
+				return entity;
 			}
 		}
 		throw new MetadataException("Invalid id for Entity "
@@ -55,9 +55,9 @@ public class MemoryEntityDao implements EntityDao {
 	}
 
 	public Entity findById(Long id) {
-		for (Entity e : this.entities) {
+		for (Entity e : memoryDatabase.getEntities()) {
 			if (e.getId().equals(id)) {
-				return (Entity) SerializationUtils.clone(e);
+				return e;
 			}
 		}
 		return null;
@@ -65,12 +65,12 @@ public class MemoryEntityDao implements EntityDao {
 
 	public List<Entity> listByFullName(String fragment) {
 		List<Entity> results = new ArrayList<Entity>();
-		for (Entity e : this.entities) {
+		for (Entity e : memoryDatabase.getEntities()) {
 			if (e.getNamespace().toLowerCase()
 					.contains(fragment.toLowerCase())
 					|| e.getName().toLowerCase()
 							.contains(fragment.toLowerCase())) {
-				results.add((Entity) SerializationUtils.clone(e));
+				results.add(e);
 			}
 		}
 		return results;
@@ -89,21 +89,15 @@ public class MemoryEntityDao implements EntityDao {
 			name = fullName;
 		}
 
-		for (Entity entity : this.entities) {
+		for (Entity entity : memoryDatabase.getEntities()) {
 			if ((namespace + "." + name).equalsIgnoreCase(entity.getFullName())) {
-				return (Entity) SerializationUtils.clone(entity);
+				return entity;
 			}
 		}
 		return null;
 	}
 
 	public void delete(Long id) {
-		for (int i = 0; i < this.entities.size(); i++) {
-			Entity e = this.entities.get(i);
-			if (e.getId().equals(id)) {
-				this.entities.remove(e);
-				return;
-			}
-		}
+		memoryDatabase.deleteEntity(id);
 	}
 }
