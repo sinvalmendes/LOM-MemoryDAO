@@ -9,95 +9,92 @@ import com.nanuvem.lom.api.dao.EntityDao;
 
 public class MemoryEntityDao implements EntityDao {
 
-	private Long id = 1L;
+    private Long id = 1L;
 
-	private MemoryDatabase memoryDatabase;
+    private MemoryDatabase memoryDatabase;
 
-	public MemoryEntityDao(MemoryDatabase memoryDatabase) {
-		this.memoryDatabase = memoryDatabase;
-	}
+    public MemoryEntityDao(MemoryDatabase memoryDatabase) {
+        this.memoryDatabase = memoryDatabase;
+    }
 
-	public Entity create(Entity entity) {
-		entity.setId(id++);
-		entity.setVersion(0);
+    public Entity create(Entity entity) {
+        entity.setId(id++);
+        entity.setVersion(0);
 
-		memoryDatabase.addEntity(entity);
-		
-		return entity;
-	}
+        memoryDatabase.addEntity(entity);
 
-	public List<Entity> listAll() {
-		List<Entity> classesReturn = new ArrayList<Entity>();
+        return entity;
+    }
 
-		for (Entity entity : memoryDatabase.getEntities()) {
-			classesReturn.add(entity);
-		}
-		return classesReturn;
-	}
+    public List<Entity> listAll() {
+        List<Entity> classesReturn = new ArrayList<Entity>();
 
-	public Entity update(Entity entity) {
-		for (Entity e : memoryDatabase.getEntities()) {
-			if (e.getId().equals(entity.getId())) {
-				if (e.getVersion() > entity.getVersion()) {
-					throw new MetadataException(
-							"Updating a deprecated version of Entity "
-									+ e.getNamespace()
-									+ "."
-									+ e.getName()
-									+ ". Get the Entity again to obtain the newest version and proceed updating.");
-				}
-				memoryDatabase.updateEntity(entity);
-				return entity;
-			}
-		}
-		throw new MetadataException("Invalid id for Entity "
-				+ entity.getNamespace() + "." + entity.getName());
-	}
+        for (Entity entity : memoryDatabase.getEntities()) {
+            classesReturn.add(entity);
+        }
+        return classesReturn;
+    }
 
-	public Entity findById(Long id) {
-		for (Entity e : memoryDatabase.getEntities()) {
-			if (e.getId().equals(id)) {
-				return e;
-			}
-		}
-		return null;
-	}
+    public Entity update(Entity entity) {
+        for (Entity e : memoryDatabase.getEntities()) {
+            if (e.getId().equals(entity.getId())) {
+                if (e.getVersion() > entity.getVersion()) {
+                    throw new MetadataException("Updating a deprecated version of Entity " + e.getNamespace() + "."
+                            + e.getName() + ". Get the Entity again to obtain the newest version and proceed updating.");
+                }
+                entity.setVersion(e.getVersion() + 1);
+                memoryDatabase.updateEntity(entity);
+                return entity;
+            }
+        }
+        throw new MetadataException("Invalid id for Entity " + entity.getNamespace() + "." + entity.getName());
+    }
 
-	public List<Entity> listByFullName(String fragment) {
-		List<Entity> results = new ArrayList<Entity>();
-		for (Entity e : memoryDatabase.getEntities()) {
-			if (e.getNamespace().toLowerCase()
-					.contains(fragment.toLowerCase())
-					|| e.getName().toLowerCase()
-							.contains(fragment.toLowerCase())) {
-				results.add(e);
-			}
-		}
-		return results;
-	}
+    public Entity findById(Long id) {
+        for (Entity e : memoryDatabase.getEntities()) {
+            if (e.getId().equals(id)) {
+                return e;
+            }
+        }
+        return null;
+    }
 
-	public Entity findByFullName(String fullName) {
-		String namespace = null;
-		String name = null;
+    public List<Entity> listByFullName(String fragment) {
+        List<Entity> results = new ArrayList<Entity>();
+        for (Entity e : memoryDatabase.getEntities()) {
+            if (e.getNamespace().toLowerCase().contains(fragment.toLowerCase())
+                    || e.getName().toLowerCase().contains(fragment.toLowerCase())
+                    || e.getFullName().toLowerCase().contains(fragment.toLowerCase())) {
+                results.add(e);
+            }
+        }
+        return results;
+    }
 
-		if (fullName.contains(".")) {
-			namespace = fullName.substring(0,
-					fullName.lastIndexOf("."));
-			name = fullName.substring(fullName.lastIndexOf(".") + 1,
-					fullName.length());
-		} else {
-			name = fullName;
-		}
+    public Entity findByFullName(String fullName) {
+        String namespace = null;
+        String name = null;
 
-		for (Entity entity : memoryDatabase.getEntities()) {
-			if ((namespace + "." + name).equalsIgnoreCase(entity.getFullName())) {
-				return entity;
-			}
-		}
-		return null;
-	}
+        if (fullName.contains(".")) {
+            namespace = fullName.substring(0, fullName.lastIndexOf("."));
+            name = fullName.substring(fullName.lastIndexOf(".") + 1, fullName.length());
+        } else {
+            name = fullName;
+        }
 
-	public void delete(Long id) {
-		memoryDatabase.deleteEntity(id);
-	}
+        for (Entity entity : memoryDatabase.getEntities()) {
+            if ((namespace + "." + name).equalsIgnoreCase(entity.getFullName())) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    public void delete(Long id) {
+        if (findById(id) == null) {
+            throw new MetadataException("Unknown id for Entity: " + id);
+        }
+
+        memoryDatabase.deleteEntity(id);
+    }
 }
