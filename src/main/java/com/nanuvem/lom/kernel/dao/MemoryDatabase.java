@@ -1,7 +1,9 @@
 package com.nanuvem.lom.kernel.dao;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import com.nanuvem.lom.api.Attribute;
 import com.nanuvem.lom.api.AttributeValue;
@@ -11,6 +13,8 @@ import com.nanuvem.lom.api.Instance;
 public class MemoryDatabase {
 
 	private HashMap<Long, Entity> entitiesById = new HashMap<Long, Entity>();
+    private HashMap<Long, List<Instance>> instancesByEntityId = new HashMap<Long, List<Instance>>();
+	
 
 	public void addEntity(Entity entity) {
 		entitiesById.put(entity.getId(), entity);
@@ -125,7 +129,15 @@ public class MemoryDatabase {
 	public void addInstance(Instance instance) {
 		Entity entity = findEntityById(instance.getEntity().getId());
 		instance.setEntity(entity);
-		entity.getInstances().add(instance);
+		getInstances(entity.getId()).add(instance);
+	}
+	
+	public List<Instance> getInstances(Long idEntity) {
+	    if (instancesByEntityId.get(idEntity) == null) {
+	        instancesByEntityId.put(idEntity, new ArrayList<Instance>());
+	    }
+	    
+	    return instancesByEntityId.get(idEntity);
 	}
 
 	public void addAttributeValue(AttributeValue value) {
@@ -136,7 +148,7 @@ public class MemoryDatabase {
 
 	private Instance findInstanceById(Long id) {
 		for (Entity entity : getEntities()) {
-			for (Instance instance : entity.getInstances()) {
+			for (Instance instance : getInstances(entity.getId())) {
 				if (instance.getId().equals(id)) {
 					return instance;
 				}

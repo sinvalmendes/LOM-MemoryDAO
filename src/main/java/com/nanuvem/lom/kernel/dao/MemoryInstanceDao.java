@@ -30,19 +30,19 @@ public class MemoryInstanceDao implements InstanceDao {
 
 	public List<Instance> listAllInstances(String fullEntityName) {
 		Entity entity = memoryDatabase.findEntityByFullName(fullEntityName);
-
+		
 		List<Instance> cloneInstances = new ArrayList<Instance>();
-		for (Instance it : entity.getInstances()) {
+		for (Instance it : memoryDatabase.getInstances(entity.getId())) {
 			cloneInstances.add((Instance) SerializationUtils.clone(it));
 		}
 		return cloneInstances;
 	}
 
 	public Instance findInstanceById(Long id) {
-		Collection<Entity> classes = memoryDatabase.getEntities();
+		Collection<Entity> entities = memoryDatabase.getEntities();
 
-		for (Entity entityEach : classes) {
-			for (Instance instanceEach : entityEach.getInstances()) {
+		for (Entity entity : entities) {
+			for (Instance instanceEach : memoryDatabase.getInstances(entity.getId())) {
 				if (instanceEach.getId().equals(id)) {
 					return instanceEach;
 				}
@@ -51,6 +51,9 @@ public class MemoryInstanceDao implements InstanceDao {
 		return null;
 	}
 
+    public List<Instance> findInstancesByEntityId(Long entityId) {
+        return memoryDatabase.getInstances(entityId);
+    }
 
 	public Instance update(Instance instance) {
 		// TODO Auto-generated method stub
@@ -61,4 +64,5 @@ public class MemoryInstanceDao implements InstanceDao {
 		// TODO Auto-generated method stub
 		
 	}
+
 }

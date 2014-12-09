@@ -4,7 +4,7 @@
 
 	<groupId>com.nanuvem.lom.dao</groupId>
 	<artifactId>memory</artifactId>
-	<version>0.0.7</version>
+	<version>0.0.8</version>
 	<packaging>jar</packaging>
 
 	<name>MemoryDAO</name>
@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>com.nanuvem.lom</groupId>
 			<artifactId>api</artifactId>
-			<version>0.0.7</version>
+			<version>0.0.8</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
