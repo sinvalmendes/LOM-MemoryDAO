@@ -5,6 +5,7 @@ import com.nanuvem.lom.api.dao.AttributeValueDao;
 import com.nanuvem.lom.api.dao.DaoFactory;
 import com.nanuvem.lom.api.dao.EntityDao;
 import com.nanuvem.lom.api.dao.InstanceDao;
+import com.nanuvem.lom.api.dao.RelationTypeDao;
 
 public class MemoryDaoFactory implements DaoFactory {
 
@@ -14,6 +15,8 @@ public class MemoryDaoFactory implements DaoFactory {
 	private MemoryAttributeDao attributeDao;
 	private MemoryInstanceDao instanceDao;
 	private MemoryAttributeValueDao attributeValueDao;
+
+	private MemoryRelationTypeDao relationTypeDao;
 
 	public MemoryDaoFactory() {
 		memoryDatabase = new MemoryDatabase();
@@ -45,6 +48,13 @@ public class MemoryDaoFactory implements DaoFactory {
 			this.attributeValueDao = new MemoryAttributeValueDao(memoryDatabase);
 		}
 		return this.attributeValueDao;
+	}
+
+	public RelationTypeDao createRelationTypeDao() {
+		if (relationTypeDao == null) {
+			this.relationTypeDao = new MemoryRelationTypeDao(memoryDatabase);
+		}
+		return this.relationTypeDao;
 	}
 
 }

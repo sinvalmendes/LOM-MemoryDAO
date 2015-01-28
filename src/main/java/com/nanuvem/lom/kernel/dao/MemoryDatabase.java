@@ -9,12 +9,13 @@ import com.nanuvem.lom.api.Attribute;
 import com.nanuvem.lom.api.AttributeValue;
 import com.nanuvem.lom.api.Entity;
 import com.nanuvem.lom.api.Instance;
+import com.nanuvem.lom.api.RelationType;
 
 public class MemoryDatabase {
 
 	private HashMap<Long, Entity> entitiesById = new HashMap<Long, Entity>();
-    private HashMap<Long, List<Instance>> instancesByEntityId = new HashMap<Long, List<Instance>>();
-	
+	private HashMap<Long, List<Instance>> instancesByEntityId = new HashMap<Long, List<Instance>>();
+	private HashMap<Long, RelationType> relationTypesById = new HashMap<Long, RelationType>();
 
 	public void addEntity(Entity entity) {
 		entitiesById.put(entity.getId(), entity);
@@ -22,6 +23,10 @@ public class MemoryDatabase {
 
 	public Collection<Entity> getEntities() {
 		return entitiesById.values();
+	}
+
+	public Collection<RelationType> getRelationTypes() {
+		return relationTypesById.values();
 	}
 
 	public void updateEntity(Entity entity) {
@@ -131,13 +136,13 @@ public class MemoryDatabase {
 		instance.setEntity(entity);
 		getInstances(entity.getId()).add(instance);
 	}
-	
+
 	public List<Instance> getInstances(Long idEntity) {
-	    if (instancesByEntityId.get(idEntity) == null) {
-	        instancesByEntityId.put(idEntity, new ArrayList<Instance>());
-	    }
-	    
-	    return instancesByEntityId.get(idEntity);
+		if (instancesByEntityId.get(idEntity) == null) {
+			instancesByEntityId.put(idEntity, new ArrayList<Instance>());
+		}
+
+		return instancesByEntityId.get(idEntity);
 	}
 
 	public void addAttributeValue(AttributeValue value) {
@@ -154,8 +159,20 @@ public class MemoryDatabase {
 				}
 			}
 		}
-		
+
 		return null;
+	}
+
+	public void addRelationType(RelationType relationType) {
+		this.relationTypesById.put(relationType.getId(), relationType);
+	}
+
+	public List<RelationType> listAllRelationTypes() {
+		List<RelationType> relationTypesToReturn = new ArrayList<RelationType>();
+		for (RelationType rt : this.getRelationTypes()) {
+			relationTypesToReturn.add(rt);
+		}
+		return relationTypesToReturn;
 	}
 
 }
