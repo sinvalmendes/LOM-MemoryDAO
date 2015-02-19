@@ -10,7 +10,7 @@ import com.nanuvem.lom.api.dao.RelationTypeDao;
 public class MemoryDaoFactory implements DaoFactory {
 
 	private MemoryDatabase memoryDatabase;
-	
+
 	private MemoryEntityDao entityDao;
 	private MemoryAttributeDao attributeDao;
 	private MemoryInstanceDao instanceDao;
@@ -21,7 +21,7 @@ public class MemoryDaoFactory implements DaoFactory {
 	public MemoryDaoFactory() {
 		memoryDatabase = new MemoryDatabase();
 	}
-	
+
 	public EntityDao createEntityDao() {
 		if (entityDao == null) {
 			this.entityDao = new MemoryEntityDao(memoryDatabase);

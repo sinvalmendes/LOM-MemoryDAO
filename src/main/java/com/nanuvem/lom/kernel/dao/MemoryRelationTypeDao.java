@@ -26,8 +26,8 @@ public class MemoryRelationTypeDao implements RelationTypeDao {
 	}
 
 	public RelationType findRelationTypeById(Long id) {
-		for(RelationType rt : memoryDatabase.getRelationTypes()){
-			if(rt.getId().equals(id)){
+		for (RelationType rt : memoryDatabase.getRelationTypes()) {
+			if (rt.getId().equals(id)) {
 				return rt;
 			}
 		}
@@ -41,6 +41,10 @@ public class MemoryRelationTypeDao implements RelationTypeDao {
 
 	public List<RelationType> listAllRelationTypes() {
 		return memoryDatabase.listAllRelationTypes();
+	}
+
+	public void delete(Long id) {
+		memoryDatabase.deleteRelationType(id);
 	}
 
 }

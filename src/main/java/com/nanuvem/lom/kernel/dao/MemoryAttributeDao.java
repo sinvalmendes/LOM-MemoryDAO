@@ -20,7 +20,7 @@ public class MemoryAttributeDao implements AttributeDao {
 		attribute.setVersion(0);
 
 		memoryDatabase.addAttribute(attribute);
-		
+
 		return attribute;
 	}
 

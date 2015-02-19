@@ -175,4 +175,8 @@ public class MemoryDatabase {
 		return relationTypesToReturn;
 	}
 
+	public void deleteRelationType(Long id) {
+		this.relationTypesById.remove(id);
+	}
+
 }

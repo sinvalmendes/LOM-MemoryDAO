@@ -15,9 +15,9 @@ public class MemoryAttributeValueDao implements AttributeValueDao {
 	public AttributeValue create(AttributeValue value) {
 		value.setId(id++);
 		value.setVersion(0);
-		
+
 		memoryDatabase.addAttributeValue(value);
-		
+
 		return value;
 	}
 }
