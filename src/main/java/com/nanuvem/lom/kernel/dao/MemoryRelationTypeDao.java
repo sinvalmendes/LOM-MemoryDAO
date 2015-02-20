@@ -2,7 +2,6 @@ package com.nanuvem.lom.kernel.dao;
 
 import java.util.List;
 
-import com.nanuvem.lom.api.Attribute;
 import com.nanuvem.lom.api.RelationType;
 import com.nanuvem.lom.api.dao.RelationTypeDao;
 
@@ -19,24 +18,16 @@ public class MemoryRelationTypeDao implements RelationTypeDao {
 	public RelationType create(RelationType relationType) {
 		relationType.setId(id++);
 		relationType.setVersion(0);
-
 		memoryDatabase.addRelationType(relationType);
-
 		return relationType;
 	}
 
 	public RelationType findRelationTypeById(Long id) {
-		for (RelationType rt : memoryDatabase.getRelationTypes()) {
-			if (rt.getId().equals(id)) {
-				return rt;
-			}
-		}
-		return null;
+		return memoryDatabase.findRelationTypeById(id);
 	}
 
-	public Attribute update(RelationType relationType) {
-		// TODO Auto-generated method stub
-		return null;
+	public RelationType update(RelationType relationType) {
+		return memoryDatabase.updateRelationType(relationType);
 	}
 
 	public List<RelationType> listAllRelationTypes() {

@@ -179,4 +179,20 @@ public class MemoryDatabase {
 		this.relationTypesById.remove(id);
 	}
 
+	public RelationType updateRelationType(RelationType relationType) {
+		int version = relationType.getVersion().intValue();
+		relationType.setVersion(++version);
+		this.relationTypesById.put(relationType.getId(), relationType);
+		return this.relationTypesById.get(relationType.getId());
+	}
+
+	public RelationType findRelationTypeById(Long id) {
+		for (RelationType rt : this.getRelationTypes()) {
+			if (rt.getId().equals(id)) {
+				return rt;
+			}
+		}
+		return null;
+	}
+
 }

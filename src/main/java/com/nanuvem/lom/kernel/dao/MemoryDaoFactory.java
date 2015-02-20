@@ -15,7 +15,6 @@ public class MemoryDaoFactory implements DaoFactory {
 	private MemoryAttributeDao attributeDao;
 	private MemoryInstanceDao instanceDao;
 	private MemoryAttributeValueDao attributeValueDao;
-
 	private MemoryRelationTypeDao relationTypeDao;
 
 	public MemoryDaoFactory() {
