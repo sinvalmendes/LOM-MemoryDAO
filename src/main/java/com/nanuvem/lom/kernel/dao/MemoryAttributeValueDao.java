@@ -5,19 +5,19 @@ import com.nanuvem.lom.api.dao.AttributeValueDao;
 
 public class MemoryAttributeValueDao implements AttributeValueDao {
 
-	private Long id = 1L;
-	private MemoryDatabase memoryDatabase;
+    private Long id = 1L;
+    private MemoryDatabase memoryDatabase;
 
-	public MemoryAttributeValueDao(MemoryDatabase memoryDatabase) {
-		this.memoryDatabase = memoryDatabase;
-	}
+    public MemoryAttributeValueDao(MemoryDatabase memoryDatabase) {
+        this.memoryDatabase = memoryDatabase;
+    }
 
-	public AttributeValue create(AttributeValue value) {
-		value.setId(id++);
-		value.setVersion(0);
+    public AttributeValue create(AttributeValue value) {
+        value.setId(id++);
+        value.setVersion(0);
 
-		memoryDatabase.addAttributeValue(value);
+        memoryDatabase.addAttributeValue(value);
 
-		return value;
-	}
+        return value;
+    }
 }

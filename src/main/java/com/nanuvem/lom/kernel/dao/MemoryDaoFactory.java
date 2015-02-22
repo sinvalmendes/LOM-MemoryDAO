@@ -5,55 +5,64 @@ import com.nanuvem.lom.api.dao.AttributeValueDao;
 import com.nanuvem.lom.api.dao.DaoFactory;
 import com.nanuvem.lom.api.dao.EntityDao;
 import com.nanuvem.lom.api.dao.InstanceDao;
+import com.nanuvem.lom.api.dao.RelationDao;
 import com.nanuvem.lom.api.dao.RelationTypeDao;
 
 public class MemoryDaoFactory implements DaoFactory {
 
-	private MemoryDatabase memoryDatabase;
+    private MemoryDatabase memoryDatabase;
 
-	private MemoryEntityDao entityDao;
-	private MemoryAttributeDao attributeDao;
-	private MemoryInstanceDao instanceDao;
-	private MemoryAttributeValueDao attributeValueDao;
-	private MemoryRelationTypeDao relationTypeDao;
+    private MemoryEntityDao entityDao;
+    private MemoryAttributeDao attributeDao;
+    private MemoryInstanceDao instanceDao;
+    private MemoryAttributeValueDao attributeValueDao;
+    private MemoryRelationTypeDao relationTypeDao;
+    private MemoryRelationDao relationDao;
 
-	public MemoryDaoFactory() {
-		memoryDatabase = new MemoryDatabase();
-	}
+    public MemoryDaoFactory() {
+        memoryDatabase = new MemoryDatabase();
+    }
 
-	public EntityDao createEntityDao() {
-		if (entityDao == null) {
-			this.entityDao = new MemoryEntityDao(memoryDatabase);
-		}
-		return this.entityDao;
-	}
+    public EntityDao createEntityDao() {
+        if (entityDao == null) {
+            this.entityDao = new MemoryEntityDao(memoryDatabase);
+        }
+        return this.entityDao;
+    }
 
-	public AttributeDao createAttributeDao() {
-		if (attributeDao == null) {
-			this.attributeDao = new MemoryAttributeDao(memoryDatabase);
-		}
-		return this.attributeDao;
-	}
+    public AttributeDao createAttributeDao() {
+        if (attributeDao == null) {
+            this.attributeDao = new MemoryAttributeDao(memoryDatabase);
+        }
+        return this.attributeDao;
+    }
 
-	public InstanceDao createInstanceDao() {
-		if (instanceDao == null) {
-			this.instanceDao = new MemoryInstanceDao(memoryDatabase);
-		}
-		return this.instanceDao;
-	}
+    public InstanceDao createInstanceDao() {
+        if (instanceDao == null) {
+            this.instanceDao = new MemoryInstanceDao(memoryDatabase);
+        }
+        return this.instanceDao;
+    }
 
-	public AttributeValueDao createAttributeValueDao() {
-		if (attributeValueDao == null) {
-			this.attributeValueDao = new MemoryAttributeValueDao(memoryDatabase);
-		}
-		return this.attributeValueDao;
-	}
+    public AttributeValueDao createAttributeValueDao() {
+        if (attributeValueDao == null) {
+            this.attributeValueDao = new MemoryAttributeValueDao(memoryDatabase);
+        }
+        return this.attributeValueDao;
+    }
 
-	public RelationTypeDao createRelationTypeDao() {
-		if (relationTypeDao == null) {
-			this.relationTypeDao = new MemoryRelationTypeDao(memoryDatabase);
-		}
-		return this.relationTypeDao;
-	}
+    public RelationTypeDao createRelationTypeDao() {
+        if (relationTypeDao == null) {
+            this.relationTypeDao = new MemoryRelationTypeDao(memoryDatabase);
+        }
+        return this.relationTypeDao;
+    }
+
+    public RelationDao createRelationDao() {
+        if (relationDao == null) {
+            this.relationDao = new MemoryRelationDao(memoryDatabase);
+        }
+        return this.relationDao;
+    }
 
 }
