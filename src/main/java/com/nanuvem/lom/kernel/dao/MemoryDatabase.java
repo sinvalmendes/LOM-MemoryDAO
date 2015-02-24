@@ -231,4 +231,13 @@ public class MemoryDatabase {
         return relations;
     }
 
+    public List<Relation> findRelationsByTargetInstance(Instance targetInstance) {
+        List<Relation> relations = new ArrayList<Relation>();
+        for (Relation relation : this.relationsById.values()) {
+            if (relation.getTarget().equals(targetInstance))
+                relations.add(relation);
+        }
+        return relations;
+    }
+
 }

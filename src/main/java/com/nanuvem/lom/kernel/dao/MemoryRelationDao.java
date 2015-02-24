@@ -54,4 +54,8 @@ public class MemoryRelationDao implements RelationDao {
         return memoryDatabase.findRelationsByRelationType(relationType);
     }
 
+    public List<Relation> findRelationsByTargetInstance(Instance targetInstance) {
+        return memoryDatabase.findRelationsByTargetInstance(targetInstance);
+    }
+
 }
