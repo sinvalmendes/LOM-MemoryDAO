@@ -213,10 +213,10 @@ public class MemoryDatabase {
         this.relationsById.remove(id);
     }
 
-    public List<Relation> findRelationsBySourceInstance(Instance source) {
+    public List<Relation> findRelationsBySourceInstance(Instance source, RelationType relationType) {
         List<Relation> relations = new ArrayList<Relation>();
         for (Relation relation : this.relationsById.values()) {
-            if (relation.getSource().equals(source))
+            if (relation.getSource().equals(source) && relation.getRelationType().getId().equals(relationType.getId()))
                 relations.add(relation);
         }
         return relations;

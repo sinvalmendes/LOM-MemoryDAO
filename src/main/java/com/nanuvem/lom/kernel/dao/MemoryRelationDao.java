@@ -46,8 +46,8 @@ public class MemoryRelationDao implements RelationDao {
 
     }
 
-    public List<Relation> findRelationsBySourceInstance(Instance source) {
-        return memoryDatabase.findRelationsBySourceInstance(source);
+    public List<Relation> findRelationsBySourceInstance(Instance source, RelationType relationType) {
+        return memoryDatabase.findRelationsBySourceInstance(source, relationType);
     }
 
     public List<Relation> findRelationsByRelationType(RelationType relationType) {
