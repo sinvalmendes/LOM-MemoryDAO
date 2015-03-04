@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.commons.lang.SerializationUtils;
 
-import com.nanuvem.lom.api.EntityType;
 import com.nanuvem.lom.api.Entity;
+import com.nanuvem.lom.api.Instance;
 import com.nanuvem.lom.api.dao.InstanceDao;
 
 public class MemoryInstanceDao implements InstanceDao {
@@ -19,30 +19,30 @@ public class MemoryInstanceDao implements InstanceDao {
         this.memoryDatabase = memoryDatabase;
     }
 
-    public Entity create(Entity entity) {
-        entity.setId(id++);
-        entity.setVersion(0);
+    public Instance create(Instance instance) {
+        instance.setId(id++);
+        instance.setVersion(0);
 
-        memoryDatabase.addInstance(entity);
+        memoryDatabase.addInstance(instance);
 
-        return entity;
+        return instance;
     }
 
-    public List<Entity> listAllInstances(String fullEntityName) {
-        EntityType entityType = memoryDatabase.findEntityByFullName(fullEntityName);
+    public List<Instance> listAllInstances(String fullEntityName) {
+        Entity entity = memoryDatabase.findEntityByFullName(fullEntityName);
 
-        List<Entity> cloneInstances = new ArrayList<Entity>();
-        for (Entity it : memoryDatabase.getInstances(entityType.getId())) {
-            cloneInstances.add((Entity) SerializationUtils.clone(it));
+        List<Instance> cloneInstances = new ArrayList<Instance>();
+        for (Instance it : memoryDatabase.getInstances(entity.getId())) {
+            cloneInstances.add((Instance) SerializationUtils.clone(it));
         }
         return cloneInstances;
     }
 
-    public Entity findInstanceById(Long id) {
-        Collection<EntityType> entityTypes = memoryDatabase.getEntities();
+    public Instance findInstanceById(Long id) {
+        Collection<Entity> entities = memoryDatabase.getEntities();
 
-        for (EntityType entityType : entityTypes) {
-            for (Entity instanceEach : memoryDatabase.getInstances(entityType.getId())) {
+        for (Entity entity : entities) {
+            for (Instance instanceEach : memoryDatabase.getInstances(entity.getId())) {
                 if (instanceEach.getId().equals(id)) {
                     return instanceEach;
                 }
@@ -51,11 +51,11 @@ public class MemoryInstanceDao implements InstanceDao {
         return null;
     }
 
-    public List<Entity> findInstancesByEntityId(Long entityId) {
+    public List<Instance> findInstancesByEntityId(Long entityId) {
         return memoryDatabase.getInstances(entityId);
     }
 
-    public Entity update(Entity entity) {
+    public Instance update(Instance instance) {
         // TODO Auto-generated method stub
         return null;
     }

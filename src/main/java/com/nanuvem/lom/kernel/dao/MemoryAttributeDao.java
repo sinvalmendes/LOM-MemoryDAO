@@ -2,8 +2,8 @@ package com.nanuvem.lom.kernel.dao;
 
 import java.util.Collection;
 
-import com.nanuvem.lom.api.PropertyType;
-import com.nanuvem.lom.api.EntityType;
+import com.nanuvem.lom.api.Attribute;
+import com.nanuvem.lom.api.Entity;
 import com.nanuvem.lom.api.dao.AttributeDao;
 
 public class MemoryAttributeDao implements AttributeDao {
@@ -15,20 +15,20 @@ public class MemoryAttributeDao implements AttributeDao {
         this.memoryDatabase = memoryDatabase;
     }
 
-    public PropertyType create(PropertyType propertyType) {
-        propertyType.setId(id++);
-        propertyType.setVersion(0);
+    public Attribute create(Attribute attribute) {
+        attribute.setId(id++);
+        attribute.setVersion(0);
 
-        memoryDatabase.addAttribute(propertyType);
+        memoryDatabase.addAttribute(attribute);
 
-        return propertyType;
+        return attribute;
     }
 
-    public PropertyType findAttributeById(Long id) {
-        Collection<EntityType> entityTypes = memoryDatabase.getEntities();
+    public Attribute findAttributeById(Long id) {
+        Collection<Entity> entities = memoryDatabase.getEntities();
 
-        for (EntityType entityEach : entityTypes) {
-            for (PropertyType attributeEach : entityEach.getAttributes()) {
+        for (Entity entityEach : entities) {
+            for (Attribute attributeEach : entityEach.getAttributes()) {
                 if (attributeEach.getId().equals(id)) {
                     return attributeEach;
                 }
@@ -37,20 +37,20 @@ public class MemoryAttributeDao implements AttributeDao {
         return null;
     }
 
-    public PropertyType findAttributeByNameAndEntityFullName(String nameAttribute, String entityFullName) {
+    public Attribute findAttributeByNameAndEntityFullName(String nameAttribute, String entityFullName) {
 
-        EntityType entityType = memoryDatabase.findEntityByFullName(entityFullName);
-        if (entityType.getAttributes() != null) {
-            for (PropertyType propertyType : entityType.getAttributes()) {
-                if (propertyType.getName().equalsIgnoreCase(nameAttribute)) {
-                    return propertyType;
+        Entity entity = memoryDatabase.findEntityByFullName(entityFullName);
+        if (entity.getAttributes() != null) {
+            for (Attribute attribute : entity.getAttributes()) {
+                if (attribute.getName().equalsIgnoreCase(nameAttribute)) {
+                    return attribute;
                 }
             }
         }
         return null;
     }
 
-    public PropertyType update(PropertyType propertyType) {
-        return memoryDatabase.updateAtribute(propertyType);
+    public Attribute update(Attribute attribute) {
+        return memoryDatabase.updateAtribute(attribute);
     }
 }

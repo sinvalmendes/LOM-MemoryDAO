@@ -2,7 +2,7 @@ package com.nanuvem.lom.kernel.dao;
 
 import java.util.List;
 
-import com.nanuvem.lom.api.Entity;
+import com.nanuvem.lom.api.Instance;
 import com.nanuvem.lom.api.MetadataException;
 import com.nanuvem.lom.api.Relation;
 import com.nanuvem.lom.api.RelationType;
@@ -46,7 +46,7 @@ public class MemoryRelationDao implements RelationDao {
 
     }
 
-    public List<Relation> findRelationsBySourceInstance(Entity source, RelationType relationType) {
+    public List<Relation> findRelationsBySourceInstance(Instance source, RelationType relationType) {
         return memoryDatabase.findRelationsBySourceInstance(source, relationType);
     }
 
@@ -54,7 +54,7 @@ public class MemoryRelationDao implements RelationDao {
         return memoryDatabase.findRelationsByRelationType(relationType);
     }
 
-    public List<Relation> findRelationsByTargetInstance(Entity targetInstance) {
+    public List<Relation> findRelationsByTargetInstance(Instance targetInstance) {
         return memoryDatabase.findRelationsByTargetInstance(targetInstance);
     }
 
