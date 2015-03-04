@@ -1,6 +1,6 @@
 package com.nanuvem.lom.kernel.dao;
 
-import com.nanuvem.lom.api.AttributeValue;
+import com.nanuvem.lom.api.Property;
 import com.nanuvem.lom.api.dao.AttributeValueDao;
 
 public class MemoryAttributeValueDao implements AttributeValueDao {
@@ -12,7 +12,7 @@ public class MemoryAttributeValueDao implements AttributeValueDao {
         this.memoryDatabase = memoryDatabase;
     }
 
-    public AttributeValue create(AttributeValue value) {
+    public Property create(Property value) {
         value.setId(id++);
         value.setVersion(0);
 

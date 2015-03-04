@@ -6,25 +6,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.nanuvem.lom.api.Attribute;
-import com.nanuvem.lom.api.AttributeValue;
+import com.nanuvem.lom.api.PropertyType;
+import com.nanuvem.lom.api.Property;
+import com.nanuvem.lom.api.EntityType;
 import com.nanuvem.lom.api.Entity;
-import com.nanuvem.lom.api.Instance;
 import com.nanuvem.lom.api.Relation;
 import com.nanuvem.lom.api.RelationType;
 
 public class MemoryDatabase {
 
-    private HashMap<Long, Entity> entitiesById = new HashMap<Long, Entity>();
-    private HashMap<Long, List<Instance>> instancesByEntityId = new HashMap<Long, List<Instance>>();
+    private HashMap<Long, EntityType> entitiesById = new HashMap<Long, EntityType>();
+    private HashMap<Long, List<Entity>> instancesByEntityId = new HashMap<Long, List<Entity>>();
     private HashMap<Long, RelationType> relationTypesById = new HashMap<Long, RelationType>();
     private HashMap<Long, Relation> relationsById = new HashMap<Long, Relation>();
 
-    public void addEntity(Entity entity) {
-        entitiesById.put(entity.getId(), entity);
+    public void addEntity(EntityType entityType) {
+        entitiesById.put(entityType.getId(), entityType);
     }
 
-    public Collection<Entity> getEntities() {
+    public Collection<EntityType> getEntities() {
         return entitiesById.values();
     }
 
@@ -32,70 +32,70 @@ public class MemoryDatabase {
         return relationTypesById.values();
     }
 
-    public void updateEntity(Entity entity) {
-        Entity myEntity = findEntityById(entity.getId());
+    public void updateEntity(EntityType entityType) {
+        EntityType myEntity = findEntityById(entityType.getId());
 
-        myEntity.setName(entity.getName());
-        myEntity.setNamespace(entity.getNamespace());
-        myEntity.setVersion(entity.getVersion());
+        myEntity.setName(entityType.getName());
+        myEntity.setNamespace(entityType.getNamespace());
+        myEntity.setVersion(entityType.getVersion());
     }
 
     public void deleteEntity(Long id) {
         entitiesById.remove(id);
     }
 
-    public Entity findEntityByFullName(String fullName) {
-        Collection<Entity> values = entitiesById.values();
-        for (Entity entity : values) {
-            if (entity.getFullName().equalsIgnoreCase(fullName)) {
-                return entity;
+    public EntityType findEntityByFullName(String fullName) {
+        Collection<EntityType> values = entitiesById.values();
+        for (EntityType entityType : values) {
+            if (entityType.getFullName().equalsIgnoreCase(fullName)) {
+                return entityType;
             }
         }
 
         return null;
     }
 
-    public Entity findEntityById(Long id) {
+    public EntityType findEntityById(Long id) {
         return entitiesById.get(id);
     }
 
-    public void addAttribute(Attribute attribute) {
-        Entity entity = findEntityById(attribute.getEntity().getId());
-        shiftSequence(attribute, entity);
-        attribute.setEntity(entity);
+    public void addAttribute(PropertyType propertyType) {
+        EntityType entityType = findEntityById(propertyType.getEntity().getId());
+        shiftSequence(propertyType, entityType);
+        propertyType.setEntity(entityType);
     }
 
-    public Attribute updateAtribute(Attribute attribute) {
-        Entity entity = findEntityById(attribute.getEntity().getId());
+    public PropertyType updateAtribute(PropertyType propertyType) {
+        EntityType entityType = findEntityById(propertyType.getEntity().getId());
 
-        Attribute attributeInEntity = null;
+        PropertyType attributeInEntity = null;
         boolean changeSequence = false;
 
-        for (int i = 0; i < entity.getAttributes().size(); i++) {
-            attributeInEntity = entity.getAttributes().get(i);
-            if (attribute.getId().equals(attributeInEntity.getId())) {
+        for (int i = 0; i < entityType.getAttributes().size(); i++) {
+            attributeInEntity = entityType.getAttributes().get(i);
+            if (propertyType.getId().equals(attributeInEntity.getId())) {
 
-                if (!attribute.getSequence().equals(attributeInEntity.getSequence())) {
+                if (!propertyType.getSequence().equals(attributeInEntity.getSequence())) {
                     changeSequence = true;
                 }
 
-                attributeInEntity.setName(attribute.getName());
-                attributeInEntity.setType(attribute.getType());
-                attributeInEntity.setConfiguration(attribute.getConfiguration());
+                attributeInEntity.setName(propertyType.getName());
+                attributeInEntity.setType(propertyType.getType());
+                attributeInEntity.setConfiguration(propertyType.getConfiguration());
                 attributeInEntity.setVersion(attributeInEntity.getVersion() + 1);
                 break;
             }
         }
 
         if (changeSequence) {
-            Attribute temp = null;
-            for (Attribute at : entity.getAttributes()) {
-                if (attribute.getId().equals(at.getId())) {
+            PropertyType temp = null;
+            for (PropertyType at : entityType.getAttributes()) {
+                if (propertyType.getId().equals(at.getId())) {
                     temp = at;
-                    entity.getAttributes().remove(at);
-                    temp.setSequence(attribute.getSequence());
+                    entityType.getAttributes().remove(at);
+                    temp.setSequence(propertyType.getSequence());
 
-                    this.shiftSequence(temp, entity);
+                    this.shiftSequence(temp, entityType);
                     break;
                 }
             }
@@ -104,56 +104,56 @@ public class MemoryDatabase {
         return attributeInEntity;
     }
 
-    private void shiftSequence(Attribute attribute, Entity entity) {
+    private void shiftSequence(PropertyType propertyType, EntityType entityType) {
         int i = 0;
-        for (; i < entity.getAttributes().size(); i++) {
-            if (attribute.getSequence().equals(entity.getAttributes().get(i).getSequence())) {
+        for (; i < entityType.getAttributes().size(); i++) {
+            if (propertyType.getSequence().equals(entityType.getAttributes().get(i).getSequence())) {
                 break;
             }
         }
 
         i++;
-        entity.getAttributes().add(i - 1, attribute);
+        entityType.getAttributes().add(i - 1, propertyType);
 
-        for (; i < entity.getAttributes().size(); i++) {
-            Attribute nextAttribute = null;
+        for (; i < entityType.getAttributes().size(); i++) {
+            PropertyType nextAttribute = null;
             try {
-                nextAttribute = entity.getAttributes().get(i);
+                nextAttribute = entityType.getAttributes().get(i);
             } catch (IndexOutOfBoundsException e) {
                 break;
             }
 
-            if (nextAttribute.getSequence().equals(entity.getAttributes().get(i - 1).getSequence())) {
+            if (nextAttribute.getSequence().equals(entityType.getAttributes().get(i - 1).getSequence())) {
                 nextAttribute.setSequence(nextAttribute.getSequence() + 1);
             }
         }
     }
 
-    public void addInstance(Instance instance) {
-        Entity entity = findEntityById(instance.getEntity().getId());
-        instance.setEntity(entity);
-        getInstances(entity.getId()).add(instance);
+    public void addInstance(Entity entity) {
+        EntityType entityType = findEntityById(entity.getEntity().getId());
+        entity.setEntity(entityType);
+        getInstances(entityType.getId()).add(entity);
     }
 
-    public List<Instance> getInstances(Long idEntity) {
+    public List<Entity> getInstances(Long idEntity) {
         if (instancesByEntityId.get(idEntity) == null) {
-            instancesByEntityId.put(idEntity, new ArrayList<Instance>());
+            instancesByEntityId.put(idEntity, new ArrayList<Entity>());
         }
 
         return instancesByEntityId.get(idEntity);
     }
 
-    public void addAttributeValue(AttributeValue value) {
-        Instance instance = findInstanceById(value.getInstance().getId());
-        value.setInstance(instance);
-        instance.getValues().add(value);
+    public void addAttributeValue(Property value) {
+        Entity entity = findInstanceById(value.getInstance().getId());
+        value.setInstance(entity);
+        entity.getValues().add(value);
     }
 
-    private Instance findInstanceById(Long id) {
-        for (Entity entity : getEntities()) {
-            for (Instance instance : getInstances(entity.getId())) {
-                if (instance.getId().equals(id)) {
-                    return instance;
+    private Entity findInstanceById(Long id) {
+        for (EntityType entityType : getEntities()) {
+            for (Entity entity : getInstances(entityType.getId())) {
+                if (entity.getId().equals(id)) {
+                    return entity;
                 }
             }
         }
@@ -213,7 +213,7 @@ public class MemoryDatabase {
         this.relationsById.remove(id);
     }
 
-    public List<Relation> findRelationsBySourceInstance(Instance source, RelationType relationType) {
+    public List<Relation> findRelationsBySourceInstance(Entity source, RelationType relationType) {
         List<Relation> relations = new ArrayList<Relation>();
         for (Relation relation : this.relationsById.values()) {
             if (relation.getSource().equals(source) && relation.getRelationType().getId().equals(relationType.getId()))
@@ -231,7 +231,7 @@ public class MemoryDatabase {
         return relations;
     }
 
-    public List<Relation> findRelationsByTargetInstance(Instance targetInstance) {
+    public List<Relation> findRelationsByTargetInstance(Entity targetInstance) {
         List<Relation> relations = new ArrayList<Relation>();
         for (Relation relation : this.relationsById.values()) {
             if (relation.getTarget().equals(targetInstance))
